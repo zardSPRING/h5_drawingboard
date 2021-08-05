@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>drawingboard</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        body {
+            background: linear-gradient(to right, #0ED2F7, #B2FEFA);
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        li:hover {
+            cursor: pointer;
+        }
+        
+        .drawingboard_container {
+            width: 900px;
+            margin: 50px auto;
+            background-color: rgb(192, 192, 192);
+        }
+        
+        .menu {
+            height: 35px;
+            position: relative;
+        }
+        
+        .firstul>li {
+            position: relative;
+            box-sizing: border-box;
+            float: left;
+            padding: 0 15px;
+            font-size: 18px;
+            line-height: 35px;
+            height: 35px;
+        }
+        
+        .secondul {
+            position: absolute;
+            z-index: 999;
+            top: 34px;
+            left: -10px;
+            display: none;
+        }
+        
+        .secondul li {
+            width: 80px;
+            text-align: center;
+            border-bottom: 1px solid black;
+            background-color: grey;
+        }
+        
+        .firstul>li:hover {
+            background-color: grey;
+        }
+        
+        .firstul>li:hover>.secondul {
+            display: block;
+        }
+        
+        .secondul li:hover {
+            color: orange;
+        }
+        
+        .open_file_btn {
+            position: relative;
+        }
+        
+        #open_file_input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 85px;
+            height: 35px;
+            opacity: 0;
+        }
+        
+        #save_href {
+            text-decoration: none;
+            color: black;
+        }
+        
+        #save_href:hover {
+            color: orange;
+        }
+        
+        .main {
+            position: relative;
+            height: 490px;
+            border-bottom: 2px solid gray;
+        }
+        
+        .about_drawing_board {
+            position: absolute;
+            display: none;
+            top: 30px;
+            left: 200px;
+            width: 500px;
+            height: 300px;
+            border-radius: 20px;
+            background-color: rgb(192, 192, 192);
+            z-index: 9999;
+        }
+        
+        .about_drawing_board p {
+            text-align: center;
+            font-size: 25px;
+            line-height: 1.8em;
+        }
+        
+        .about_drawing_board button {
+            font-size: 25px;
+            width: 180px;
+            height: 50px;
+            margin-top: 10px;
+            margin-left: 160px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        
+        .tool_bar_section {
+            position: relative;
+            top: 0;
+            left: 5px;
+            width: 56px;
+            height: 200px;
+        }
+        
+        .tools {
+            border-left: 2px solid white;
+            border-top: 2px solid white;
+            border-right: 1px solid black;
+            border-bottom: 1px solid black;
+            float: left;
+            width: 24px;
+            height: 24px;
+            background-image: url(./images/tool_bar.png);
+        }
+        
+        .pen_width_section {
+            position: absolute;
+            top: 222px;
+            left: 10px;
+            border: 1px solid black;
+            border-right-color: white;
+            border-bottom-color: white;
+            width: 40px;
+            height: 85px;
+        }
+        
+        .pen_width_section li {
+            position: relative;
+            height: 17px;
+        }
+        
+        .pen_width_section li:first-child {
+            background-color: rgb(0, 1, 122);
+        }
+        
+        .pen_width_section li div {
+            position: absolute;
+            left: 5px;
+            top: 35%;
+            width: 30px;
+            background-color: black;
+        }
+        
+        .pen_width_thinnest {
+            height: 2px;
+        }
+        
+        .pen_width_thin {
+            height: 3px;
+        }
+        
+        .pen_width_normal {
+            height: 4px;
+        }
+        
+        .pen_width_thick {
+            height: 5px;
+        }
+        
+        .pen_width_thickest {
+            height: 6px;
+        }
+        
+        #prev_action_btn,
+        #next_action_btn {
+            position: absolute;
+            width: 26px;
+            height: 30px;
+            top: 3px;
+            left: 280px;
+            background-image: url(./images/prev.png);
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        #next_action_btn {
+            left: 310px;
+            background-image: url(./images/next.png);
+        }
+        
+        #prev_action_btn:hover,
+        #next_action_btn:hover {
+            cursor: pointer;
+            background-color: gray;
+        }
+        
+        .canvas_section {
+            position: absolute;
+            left: 70px;
+            top: 0;
+            width: 829px;
+            height: 410px;
+            background-color: gray;
+            box-sizing: border-box;
+            padding: 5px;
+        }
+        
+        .canvas_div {
+            position: relative;
+            width: 760px;
+            height: 380px;
+            background-color: white;
+        }
+        
+        #textarea {
+            position: absolute;
+            display: none;
+        }
+        
+        .color_board_section {
+            position: absolute;
+            bottom: 5px;
+            left: 4px;
+            width: 440px;
+            height: 60px;
+        }
+        
+        .using_color_section {
+            float: left;
+            position: relative;
+            width: 50px;
+            height: 50px;
+            background-color: rgb(223, 223, 223);
+            border: 2px solid gray;
+            border-right-color: white;
+            border-bottom-color: white;
+        }
+        
+        .using_color_section div {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            box-sizing: border-box;
+            border: 2px solid rgb(122, 122, 122);
+        }
+        
+        .using_color_one {
+            top: 5px;
+            left: 5px;
+            background-color: black;
+            z-index: 999;
+        }
+        
+        .using_color_two {
+            bottom: 5px;
+            right: 5px;
+            background-color: white;
+        }
+        
+        .colors {
+            float: left;
+            width: 380px;
+            height: 60px;
+            margin-left: 2px;
+            margin-top: 2px;
+        }
+        
+        .colors li {
+            float: left;
+            width: 24px;
+            height: 24px;
+            box-sizing: border-box;
+            margin-left: 2px;
+            margin-bottom: 2px;
+            border: 2px solid black;
+            border-right-width: 1px;
+            border-bottom-width: 1px;
+        }
+        
+        .banner {
+            margin-top: 2px;
+            height: 30px;
+            line-height: 30px;
+            border-top: 2px solid gray;
+        }
+    </style>
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+
+            var menu = document.querySelector(".menu");
+            var aboutBoardBtn = document.querySelector(".about_board_btn");
+            var aboutDrawingBoard = document.querySelector(".about_drawing_board");
+            var closeInformationBtn = document.querySelector("#close_information_btn");
+            var colorBoardBtn = document.querySelector(".color_board_btn");
+            var statusBoardBtn = document.querySelector(".status_board_btn");
+            var toolBarSection = document.querySelector(".tool_bar_section");
+            var penWidthSection = document.querySelector(".pen_width_section");
+            var colorBoardSection = document.querySelector(".color_board_section");
+            var tools = document.getElementsByClassName("tools");
+            var toolBarBtn = document.querySelector(".tool_bar_btn");
+            var toolsEraser = document.getElementById("tools_eraser");
+
+            var pen_width_lis = document.querySelector(".pen_width_section").children;
+            var myCanvas = document.getElementById("mycanvas");
+            var context = myCanvas.getContext("2d");
+            context.font = "20px 宋体";
+            context.textBaseline = "middle";
+
+            var newFileBtn = document.querySelector(".new_file_btn");
+            var openFileInput = document.querySelector("#open_file_input");
+            var saveFileBtn = document.querySelector(".save_file_btn");
+            var clearFileBtn = document.querySelector(".clear_file_btn");
+            var toolsPencil = document.getElementById("tools_pencil");
+            var toolsSolidRectange = document.getElementById("tools_solid_rectange");
+            var toolsStraightLine = document.getElementById("tools_straight_line");
+            var toolsCircle = document.getElementById("tools_circle");
+            var canvasImgDataArr = [];
+            var restoreFileBtn = document.querySelector(".restore_file_btn");
+            var prevActionBtn = document.querySelector("#prev_action_btn");
+            var nextActionBtn = document.querySelector("#next_action_btn");
+
+            var colors = document.querySelector(".colors");
+            var usingColorOne = document.querySelector(".using_color_one");
+            var usingColorTwo = document.querySelector(".using_color_two");
+            var start_x;
+            var start_y;
+            var end_x;
+            var end_y;
+            var toolBarBtnFlag = true;
+            var colorBoardBtnFlag = true;
+            var statusBoardBtnFlag = true;
+            var canvasImgDataIndex = -1;
+            var twoColorsFlag = true;
+
+            var toolsText = document.getElementById("tools_text");
+            var textarea = document.getElementById("textarea");
+            var textTimer;
+            var drawingImgDataArr = [];
+
+            function drawingImgCopy() {
+                drawingImgDataArr[drawingImgDataArr.length] = context.getImageData(0, 0, 760, 380);
+            }
+
+            function drawingImgPrime() {
+                context.putImageData(drawingImgDataArr[drawingImgDataArr.length - 1], 0, 0);
+            }
+
+            function canvasCopy() {
+                canvasImgDataIndex++;
+                canvasImgDataArr[canvasImgDataIndex] = context.getImageData(0, 0, 760, 380);
+            }
+
+            function canvasPrevAction() {
+                if (canvasImgDataIndex > 1) {
+                    canvasImgDataIndex--;
+                    context.putImageData(canvasImgDataArr[canvasImgDataIndex], 0, 0);
+                    console.log("撤销成功,还能撤销" + (canvasImgDataIndex - 1) + "次操作");
+                }
+            }
+
+            function canvasNextAction() {
+                if (canvasImgDataArr.length - canvasImgDataIndex > 1) {
+                    canvasImgDataIndex++;
+                    context.putImageData(canvasImgDataArr[canvasImgDataIndex], 0, 0);
+                    console.log("恢复成功，还能恢复" + (canvasImgDataArr.length - canvasImgDataIndex - 1) + "次操作");
+                }
+            }
+
+            canvasCopy();
+
+            for (var i = 0; i < 16; i++) {
+                var x = Math.floor(i % 2);
+                var y = Math.floor(i / 2);
+                x = -x * 24;
+                y = -y * 25;
+                tools[i].style.backgroundPosition = x + "px " + y + "px";
+                tools[i].onclick = function() {
+                    for (var j = 0; j < 16; j++) {
+                        tools[j].style.backgroundColor = "";
+                    }
+                    myCanvas.onmousedown = null;
+                    myCanvas.onmousemove = null;
+                    clearInterval(textTimer);
+                    textarea.style.display = "none";
+                    var thisBackgroundColor = document.defaultView.getComputedStyle(this, null).getPropertyValue("background-color");
+                    if (thisBackgroundColor != "rgb(255, 255, 255)") {
+                        canvasCopy();
+                    }
+
+                    this.style.backgroundColor = "white";
+                    myCanvas.style.cursor = "auto";
+
+                    var eraserBackgroundColor = document.defaultView.getComputedStyle(toolsEraser, null).getPropertyValue("background-color");
+                    if (eraserBackgroundColor === "rgb(255, 255, 255)") {
+                        myCanvas.style.cursor = "url(./images/cursor_eraser.png),auto";
+                    }
+
+                    var toolsPencilBackgroundColor = document.defaultView.getComputedStyle(toolsPencil, null).getPropertyValue("background-color");
+                    if (toolsPencilBackgroundColor === "rgb(255, 255, 255)") {
+                        myCanvas.style.cursor = "url(./images/cursor_pencil.png),auto";
+                    }
+
+                }
+
+            }
+
+            for (var i = 0; i < 5; i++) {
+                pen_width_lis[i].onclick = function() {
+                    for (var j = 0; j < 5; j++) {
+                        pen_width_lis[j].style.backgroundColor = "rgb(192, 192, 192)";
+                    }
+                    this.style.backgroundColor = "rgb(0, 1, 122)";
+
+                    var penWidthClassName = this.children[0].className;
+                    if (penWidthClassName === "pen_width_thinnest") {
+                        context.lineWidth = 1;
+                    } else if (penWidthClassName === "pen_width_thin") {
+                        context.lineWidth = 4;
+                    } else if (penWidthClassName === "pen_width_normal") {
+                        context.lineWidth = 7;
+                    } else if (penWidthClassName = "pen_width_thick") {
+                        context.lineWidth = 10;
+                    } else if (penWidthClassName = "pen_width_thickest") {
+                        context.lineWidth = 13;
+                    }
+                }
+            }
+
+            for (var i = 0; i < 28; i++) {
+                colors.children[i].addEventListener("click", function() {
+                    var backgroundColor = document.defaultView.getComputedStyle(this, null).getPropertyValue("background-color");
+                    if (twoColorsFlag) {
+                        context.strokeStyle = backgroundColor;
+                        usingColorOne.style.backgroundColor = backgroundColor;
+                    } else {
+                        usingColorTwo.style.backgroundColor = backgroundColor;
+                        context.fillStyle = backgroundColor;
+                    }
+                })
+            }
+
+            aboutBoardBtn.addEventListener("click", function() {
+                aboutDrawingBoard.style.display = "block";
+            })
+
+            closeInformationBtn.addEventListener("click", function() {
+                aboutDrawingBoard.style.display = "none";
+            })
+
+            toolBarBtn.addEventListener("click", function() {
+                toolBarBtnFlag = !toolBarBtnFlag;
+                if (toolBarBtnFlag) {
+                    toolBarSection.style.display = "block";
+                } else {
+                    toolBarSection.style.display = "none";
+                }
+            })
+
+            colorBoardBtn.addEventListener("click", function() {
+                colorBoardBtnFlag = !colorBoardBtnFlag;
+                if (colorBoardBtnFlag) {
+                    colorBoardSection.style.display = "block";
+                } else {
+                    colorBoardSection.style.display = "none";
+                }
+            })
+
+            statusBoardBtn.addEventListener("click", function() {
+                statusBoardBtnFlag = !statusBoardBtnFlag;
+                if (statusBoardBtnFlag) {
+                    for (var i = 0; i < penWidthSection.children.length; i++) {
+                        penWidthSection.children[i].style.display = "block";
+                    }
+                } else {
+                    for (var i = 0; i < penWidthSection.children.length; i++) {
+                        penWidthSection.children[i].style.display = "none";
+                    }
+                }
+
+            })
+
+            usingColorOne.addEventListener("click", function() {
+                twoColorsFlag = true;
+            })
+
+            usingColorTwo.addEventListener("click", function() {
+                twoColorsFlag = false;
+            })
+
+            newFileBtn.addEventListener("click", function() {
+                context.beginPath();
+                context.fillStyle = "white";
+                context.fillRect(0, 0, 760, 380);
+                context.closePath();
+                context.lineWidth = 1;
+                context.strokeStyle = "black";
+                usingColorOne.style.backgroundColor = "black";
+                usingColorTwo.style.backgroundColor = "white";
+                for (var i = 0; i < 16; i++) {
+                    tools[i].style.backgroundColor = "";
+                }
+
+                for (var i = 1; i < 5; i++) {
+                    pen_width_lis[i].style.backgroundColor = "rgb(192, 192, 192)";
+                }
+                pen_width_lis[0].style.backgroundColor = "rgb(0, 1, 122)";
+
+
+            })
+
+            menu.addEventListener("click", function() {
+                textarea.style.display = "none";
+            })
+
+            openFileInput.addEventListener("change", function(e) {
+                var fileObj = openFileInput.files[0];
+                var reader = new FileReader();
+                reader.readAsDataURL(fileObj);
+                reader.onload = function() {
+                    var img = new Image();
+                    img.src = reader.result;
+                    img.onload = function() {
+                        context.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width, img.height);
+                        canvasCopy();
+                    };
+                }
+            })
+
+            saveFileBtn.addEventListener("click", function() {
+                var strDataURI = myCanvas.toDataURL("image/png");
+                var date = new Date();
+                var saveHref = document.getElementById("save_href");
+                saveHref.download = "canvas_" + date.getFullYear() + "-" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getHours() + "h" + date.getMinutes() + "m" + date.getSeconds() + "s";
+                saveHref.href = strDataURI;
+            })
+
+            restoreFileBtn.addEventListener("click", function() {
+                canvasPrevAction();
+            })
+
+            prevActionBtn.addEventListener("click", function() {
+                canvasPrevAction();
+            })
+
+            nextActionBtn.addEventListener("click", function() {
+                canvasNextAction();
+            })
+
+            clearFileBtn.addEventListener("click", function() {
+                context.beginPath();
+                context.fillStyle = "white";
+                context.fillRect(0, 0, 760, 380);
+                context.closePath();
+            })
+
+
+
+            myCanvas.addEventListener("mousedown", function(e) {
+
+                drawingImgCopy();
+                start_x = e.offsetX;
+                start_y = e.offsetY;
+
+                var toolsTextBackgroundColor = document.defaultView.getComputedStyle(toolsText, null).getPropertyValue("background-color");
+                if (toolsTextBackgroundColor === "rgb(255, 255, 255)") {
+                    canvasCopy();
+                    clearInterval(textTimer);
+                    textarea.style.left = start_x + "px";
+                    textarea.style.top = start_y + "px";
+                    textarea.style.display = "block";
+                    textarea.value = "";
+                    textarea.focus();
+                    var usingColorTwoBackgroundColor = document.defaultView.getComputedStyle(usingColorTwo, null).getPropertyValue("background-color");
+                    if (usingColorTwoBackgroundColor === "rgb(255, 255, 255)") {
+                        context.fillStyle = "black";
+                    }
+                    textTimer = setInterval(function() {
+                        context.putImageData(canvasImgDataArr[canvasImgDataIndex], 0, 0);
+                        context.fillText(textarea.value, start_x, start_y);
+                    }, 200)
+                }
+
+                myCanvas.onmousemove = function(e) {
+                    move_x = e.offsetX;
+                    move_y = e.offsetY;
+
+                    var toolsPencilBackgroundColor = document.defaultView.getComputedStyle(toolsPencil, null).getPropertyValue("background-color");
+                    if (toolsPencilBackgroundColor === "rgb(255, 255, 255)") {
+                        context.beginPath();
+                        context.moveTo(start_x, start_y);
+                        context.lineTo(move_x, move_y);
+                        context.stroke();
+                        context.closePath();
+                        start_x = move_x;
+                        start_y = move_y;
+                    }
+
+                    var toolsEraserBackgroundColor = document.defaultView.getComputedStyle(toolsEraser, null).getPropertyValue("background-color");
+                    if (toolsEraserBackgroundColor === "rgb(255, 255, 255)") {
+                        context.beginPath();
+                        clear_x = e.offsetX;
+                        clear_y = e.offsetY;
+                        context.arc(clear_x, clear_y, 4, 0, 2.0 * Math.PI);
+                        context.fillStyle = "white";
+                        context.fill();
+                        context.closePath();
+                    }
+
+                    var toolsSolidRectangeBackgroundColor = document.defaultView.getComputedStyle(toolsSolidRectange, null).getPropertyValue("background-color");
+                    if (toolsSolidRectangeBackgroundColor === "rgb(255, 255, 255)") {
+                        drawingImgPrime();
+                        context.beginPath();
+                        context.rect(start_x, start_y, move_x - start_x, move_y - start_y);
+                        var fillStyle = document.defaultView.getComputedStyle(usingColorTwo, null).getPropertyValue("background-color");
+                        if (fillStyle != "rgb(255, 255, 255)") {
+                            context.fillStyle = fillStyle;
+                            context.fill();
+                        }
+                        context.stroke();
+                        context.closePath();
+                    }
+
+                    var toolsCircleBackgroundColor = document.defaultView.getComputedStyle(toolsCircle, null).getPropertyValue("background-color");
+                    if (toolsCircleBackgroundColor === "rgb(255, 255, 255)") {
+                        drawingImgPrime();
+                        context.beginPath();
+                        var circle_x = (start_x + move_x) / 2;
+                        var circle_y = (start_y + move_y) / 2;
+                        var circle_r = Math.sqrt((start_x - move_x) * (start_x - move_x) + (start_y - move_y) * (start_y - move_y)) / 2;
+                        context.arc(circle_x, circle_y, circle_r, 0, 2.0 * Math.PI);
+                        var fillStyle = document.defaultView.getComputedStyle(usingColorTwo, null).getPropertyValue("background-color");
+                        if (fillStyle != "rgb(255, 255, 255)") {
+                            context.fillStyle = fillStyle;
+                            context.fill();
+                        }
+                        context.stroke();
+                        context.closePath();
+                    }
+
+                    var toolsStraightLineBackgroundColor = document.defaultView.getComputedStyle(toolsStraightLine, null).getPropertyValue("background-color");
+                    if (toolsStraightLineBackgroundColor === "rgb(255, 255, 255)") {
+                        drawingImgPrime();
+                        context.beginPath();
+                        context.moveTo(start_x, start_y);
+                        context.lineTo(move_x, move_y);
+                        context.stroke();
+                        context.closePath();
+                    }
+
+                }
+
+            })
+
+
+
+            myCanvas.addEventListener("mouseup", function(e) {
+                end_x = e.offsetX;
+                end_y = e.offsetY;
+                myCanvas.onmousedown = null;
+                myCanvas.onmousemove = null;
+                var toolsPencilBackgroundColor = document.defaultView.getComputedStyle(toolsPencil, null).getPropertyValue("background-color");
+                if (toolsPencilBackgroundColor === "rgb(255, 255, 255)") {
+                    clearInterval(textTimer);
+                    canvasCopy();
+                }
+
+                var toolsSolidRectangeBackgroundColor = document.defaultView.getComputedStyle(toolsSolidRectange, null).getPropertyValue("background-color");
+                if (toolsSolidRectangeBackgroundColor === "rgb(255, 255, 255)") {
+                    context.beginPath();
+                    context.rect(start_x, start_y, end_x - start_x, end_y - start_y);
+                    var fillStyle = document.defaultView.getComputedStyle(usingColorTwo, null).getPropertyValue("background-color");
+                    if (fillStyle != "rgb(255, 255, 255)") {
+                        context.fillStyle = fillStyle;
+                        context.fill();
+                    }
+                    context.stroke();
+                    context.closePath();
+                    canvasCopy();
+                }
+
+
+                var toolsStraightLineBackgroundColor = document.defaultView.getComputedStyle(toolsStraightLine, null).getPropertyValue("background-color");
+                if (toolsStraightLineBackgroundColor === "rgb(255, 255, 255)") {
+                    context.beginPath();
+                    context.moveTo(start_x, start_y);
+                    context.lineTo(end_x, end_y);
+                    context.stroke();
+                    context.closePath();
+                    canvasCopy();
+
+                }
+
+                var toolsCircleBackgroundColor = document.defaultView.getComputedStyle(toolsCircle, null).getPropertyValue("background-color");
+                if (toolsCircleBackgroundColor === "rgb(255, 255, 255)") {
+                    context.beginPath();
+                    var circle_x = (start_x + end_x) / 2;
+                    var circle_y = (start_y + end_y) / 2;
+                    var circle_r = Math.sqrt((start_x - end_x) * (start_x - end_x) + (start_y - end_y) * (start_y - end_y)) / 2;
+                    context.arc(circle_x, circle_y, circle_r, 0, 2.0 * Math.PI);
+                    var fillStyle = document.defaultView.getComputedStyle(usingColorTwo, null).getPropertyValue("background-color");
+                    if (fillStyle != "rgb(255, 255, 255)") {
+                        context.fillStyle = fillStyle;
+                        context.fill();
+                    }
+                    context.stroke();
+                    context.closePath();
+                    canvasCopy();
+                }
+
+                var toolsEraserBackgroundColor = document.defaultView.getComputedStyle(toolsEraser, null).getPropertyValue("background-color");
+                if (toolsEraserBackgroundColor === "rgb(255, 255, 255)") {
+                    canvasCopy();
+                    var fillStyle = document.defaultView.getComputedStyle(usingColorTwo, null).getPropertyValue("background-color");
+                    context.fillStyle = fillStyle;
+                }
+
+            })
+
+
+
+        })
+    </script>
+</head>
+
+<body>
+    <div class="drawingboard_container">
+
+        <div class="menu">
+            <ul class="firstul">
+                <li>文件
+                    <ul class="secondul">
+                        <li class="new_file_btn">新建</li>
+                        <li class="open_file_btn"><input type="file" name="" id="open_file_input" multiple="multiple" accept="image/*">打开</li>
+                        <li class="save_file_btn"><a href="" id="save_href" download="canvas.png">保存</a></li>
+                    </ul>
+                </li>
+                <li>编辑
+                    <ul class="secondul">
+                        <li class="restore_file_btn">撤销</li>
+                        <li class="clear_file_btn">清空</li>
+                    </ul>
+                </li>
+                <li>视图
+                    <ul class="secondul">
+                        <li class="tool_bar_btn">工具栏</li>
+                        <li class="color_board_btn">色板</li>
+                        <li class="status_board_btn">状态栏</li>
+                    </ul>
+                </li>
+                <li>帮助
+                    <ul class="secondul">
+                        <li class="about_board_btn">关于画板</li>
+                    </ul>
+                </li>
+            </ul>
+            <div id="prev_action_btn"></div>
+            <div id="next_action_btn"></div>
+        </div>
+
+        <div class="main">
+            <div class="about_drawing_board">
+                <p>author：wjy</p>
+                <p>version：1.0.0</p>
+                <p>updateTime：2021/8/5</p>
+                <p>canvas：760*380(px)</p>
+                <p>feedbackToQQ：2741475985</p>
+                <button id="close_information_btn">CLOSE</button>
+            </div>
+            <div class="tool_bar_section">
+                <div class="tools"></div>
+                <div class="tools" id="tools_dotted_rectange"></div>
+                <div class="tools" id="tools_eraser"></div>
+                <div class="tools"></div>
+                <div class="tools"></div>
+                <div class="tools"></div>
+                <div class="tools" id="tools_pencil"></div>
+                <div class="tools"></div>
+                <div class="tools"></div>
+                <div class="tools" id="tools_text"></div>
+                <div class="tools" id="tools_straight_line"></div>
+                <div class="tools"></div>
+                <div class="tools" id="tools_solid_rectange"></div>
+                <div class="tools"></div>
+                <div class="tools" id="tools_circle"></div>
+                <div class="tools"></div>
+            </div>
+            <ul class="pen_width_section">
+                <li>
+                    <div class="pen_width_thinnest"></div>
+                </li>
+                <li>
+                    <div class="pen_width_thin"></div>
+                </li>
+                <li>
+                    <div class="pen_width_normal"></div>
+                </li>
+                <li>
+                    <div class="pen_width_thick"></div>
+                </li>
+                <li>
+                    <div class="pen_width_thickest"></div>
+                </li>
+            </ul>
+            <div class="canvas_section">
+                <div class="canvas_div">
+                    <textarea name="" id="textarea"></textarea>
+                    <canvas id="mycanvas" width="760" height="380"></canvas>
+                </div>
+            </div>
+            <div class="color_board_section">
+                <div class="using_color_section">
+                    <div class="using_color_one"></div>
+                    <div class="using_color_two"></div>
+                </div>
+                <ul class="colors">
+                    <li style="background-color: rgb(0, 0, 0);"></li>
+                    <li style="background-color: rgb(120, 120, 120);"></li>
+                    <li style="background-color: rgb(135, 0, 0);"></li>
+                    <li style="background-color: rgb(117, 122, 12);"></li>
+                    <li style="background-color: rgb(0, 123, 25);"></li>
+                    <li style="background-color: rgb(0,121,122);"></li>
+                    <li style="background-color: rgb(2, 0, 119);"></li>
+                    <li style="background-color: rgb(137, 0, 116);"></li>
+                    <li style="background-color: rgb(118, 122, 58);"></li>
+                    <li style="background-color: rgb(0, 55, 56);"></li>
+                    <li style="background-color: rgb(0, 113, 253);"></li>
+                    <li style="background-color: rgb(0, 50, 120);"></li>
+                    <li style="background-color: rgb(77, 0, 252);"></li>
+                    <li style="background-color: rgb(131, 55, 0);"></li>
+                    <li style="background-color: rgb(255, 255, 255);"></li>
+                    <li style="background-color: rgb(187, 187, 187);"></li>
+                    <li style="background-color: rgb(255, 0, 0);"></li>
+                    <li style="background-color: rgb(251, 255, 36);"></li>
+                    <li style="background-color: rgb(0, 255, 64);"></li>
+                    <li style="background-color: rgb(0, 255, 255);"></li>
+                    <li style="background-color: rgb(45, 0, 252);"></li>
+                    <li style="background-color: rgb(255, 0, 249);"></li>
+                    <li style="background-color: rgb(252, 255, 126);"></li>
+                    <li style="background-color: rgb(0, 255, 135);"></li>
+                    <li style="background-color: rgb(0, 255, 255);"></li>
+                    <li style="background-color: rgb(131, 112, 252);"></li>
+                    <li style="background-color: rgb(255, 0, 107);"></li>
+                    <li style="background-color: rgb(255, 116, 28);"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="banner">For Help,click Help Topics on the Help Menu.</div>
+    </div>
+</body>
+
+</html>
